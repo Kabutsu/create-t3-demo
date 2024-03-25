@@ -22,7 +22,7 @@ export function CreatePost() {
         e.preventDefault();
         createPost.mutate({ name });
       }}
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-2 max-w-xs w-full"
     >
       <input
         type="text"

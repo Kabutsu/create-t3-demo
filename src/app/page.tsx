@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
+import { PostCard } from './_components/postcard';
 
 export default async function Home() {
   const hello = await api.post.hello({ text: "from tRPC" });
@@ -66,15 +67,15 @@ async function CrudShowcase() {
   const session = await getServerAuthSession();
   if (!session?.user) return null;
 
-  const latestPost = await api.post.getLatest();
+  const posts = await api.post.getFromAll();
 
   return (
-    <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
-      ) : (
-        <p>You have no posts yet.</p>
-      )}
+    <div className="w-full max-w-5xl flex flex-col items-center gap-10">
+      <div className="flex flex-1 w-full flex-row items-baseline justify-between gap-4 p-3 pb-6 overflow-x-scroll">
+        {posts?.map((post) => (
+          <PostCard key={post.id} post={post} />
+        )) || <p>No posts yet.</p>}
+      </div>
 
       <CreatePost />
     </div>

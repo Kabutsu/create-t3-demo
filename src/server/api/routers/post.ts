@@ -36,6 +36,18 @@ export const postRouter = createTRPCRouter({
     });
   }),
 
+  getFromAll: protectedProcedure.query(({ ctx }) => {
+    return ctx.db.post.findMany({
+      include: {
+        createdBy: {
+          select: { id: true, name: true },
+        }
+      },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    });
+  }),
+
   getSecretMessage: protectedProcedure.query(() => {
     return "you can now see this secret message!";
   }),
